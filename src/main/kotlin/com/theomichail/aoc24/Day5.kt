@@ -20,7 +20,7 @@ private fun part1() {
         val applicableRules = getApplicableRules(rules, update)
 
         applicableRules.forEach inner@{ rule ->
-            if (rule.isViolated(update)) return@outer
+            if (update violates rule) return@outer
         }
 
         validMiddleSum += update[update.size / 2]
@@ -38,7 +38,7 @@ private fun part2() {
         val applicableRules = getApplicableRules(rules, update)
 
         applicableRules.forEach inner@{ rule ->
-            if (rule.isViolated(update)) {
+            if (update violates rule) {
                 correctedMiddleSum += correctAndGetMiddleSum(update, applicableRules)
                 return@outer
             }
@@ -103,10 +103,10 @@ private class RulesComparator(private val rules: List<Rule>): Comparator<Int> {
     }
 }
 
-private fun Rule.isViolated(update: List<Int>): Boolean {
-    return when(position) {
-        Position.BEFORE -> update.indexOf(larger) > update.indexOf(smaller)
-        Position.AFTER -> update.indexOf(larger) < update.indexOf(smaller)
+private infix fun List<Int>.violates(rule: Rule): Boolean {
+    return when(rule.position) {
+        Position.BEFORE -> indexOf(rule.larger) > indexOf(rule.smaller)
+        Position.AFTER -> indexOf(rule.larger) < indexOf(rule.smaller)
     }
 }
 
