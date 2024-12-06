@@ -29,27 +29,27 @@ private fun part2() {
 
     var newObstacleCount = 0
 
-    board.forEachIndexed outer@{ y, row ->
-        row.forEachIndexed inner@{ x, tile ->
-            var currentGuardState = originalGuardState
+    val originalPathPoints = getInitialPath(board, originalGuardState)
 
-            if (tile == Tile.OBSTACLE) return@inner
-            if (originalGuardState.isAt(x, y)) return@inner
+    originalPathPoints.forEach { (x, y) ->
+        var currentGuardState = originalGuardState
 
-            val modifiedBoard = board.clone()
-            modifiedBoard[x,y] = Tile.OBSTACLE
+        if (board[x,y] == Tile.OBSTACLE) return@forEach
+        if (originalGuardState.isAt(x, y)) return@forEach
 
-            val states = mutableSetOf<State>()
+        val modifiedBoard = board.clone()
+        modifiedBoard[x,y] = Tile.OBSTACLE
 
-            while (true) {
-                currentGuardState = getNextState(currentGuardState, modifiedBoard) ?: break
+        val states = mutableSetOf<State>()
 
-                if (states.contains(currentGuardState)) {
-                    newObstacleCount ++
-                    break
-                } else {
-                    states.add(currentGuardState)
-                }
+        while (true) {
+            currentGuardState = getNextState(currentGuardState, modifiedBoard) ?: break
+
+            if (states.contains(currentGuardState)) {
+                newObstacleCount ++
+                break
+            } else {
+                states.add(currentGuardState)
             }
         }
     }
@@ -98,6 +98,20 @@ private fun getNextState(currentState: State, board: Board): State? {
                 movedState
             }
             Tile.OBSTACLE -> currentState.turn()
+        }
+    }
+}
+
+private fun getInitialPath(originalBoard: Board, originalGuardState: State): Set<Pair<Int, Int>> {
+    val board = originalBoard.clone()
+
+    return buildSet {
+        var currentGuardState = originalGuardState
+
+        while (true) {
+            val newState = getNextState(currentGuardState, board) ?: break
+            add(newState.x to newState.y)
+            currentGuardState = newState
         }
     }
 }
