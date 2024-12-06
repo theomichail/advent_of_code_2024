@@ -1,4 +1,4 @@
-package com.theomichail.com.theomichail.aoc24
+package com.theomichail.aoc24
 
 import java.io.File
 import java.util.PriorityQueue
