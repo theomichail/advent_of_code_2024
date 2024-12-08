@@ -1,6 +1,6 @@
 package com.theomichail.aoc24
 
-fun main() {
+private fun main() {
     Day07().main()
 }
 
