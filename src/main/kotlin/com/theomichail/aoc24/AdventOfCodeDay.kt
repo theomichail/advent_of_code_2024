@@ -9,7 +9,7 @@ abstract class AdventOfCodeDay {
     private val dayNumber = this::class.simpleName?.replace("Day", "") ?: "Unknown"
     protected val input = File("inputs/$dayNumber")
 
-    private var warmUpRuns = 10
+    protected var warmUpRuns = 10
 
     fun main() {
         // Allow runtime optimisations to kick in before timing
